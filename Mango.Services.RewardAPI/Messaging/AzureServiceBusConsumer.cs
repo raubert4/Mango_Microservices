@@ -26,7 +26,11 @@ namespace Mango.Services.RewardAPI.Messaging
             orderCreatedTopic = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreatedTopic");
             orderCreatedRewardSubscription = _configuration.GetValue<string>("TopicAndQueueNames:OrderCreated_Rewards_Subscription");
 
-            var client = new ServiceBusClient(serviceBusConnectionString);
+            var clientOptions = new ServiceBusClientOptions()
+            {
+                TransportType = ServiceBusTransportType.AmqpWebSockets
+            };
+            var client = new ServiceBusClient(serviceBusConnectionString, clientOptions);
             _rewardProcessor = client.CreateProcessor(orderCreatedTopic,orderCreatedRewardSubscription);
         }
 

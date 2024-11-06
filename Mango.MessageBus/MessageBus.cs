@@ -15,7 +15,11 @@ namespace Mango.MessageBus
 
         public async Task PublishMessage(object message, string topic_queue_Name)
         {
-            await using var client = new ServiceBusClient(connectionString);
+            var clientOptions = new ServiceBusClientOptions()
+            {
+                TransportType = ServiceBusTransportType.AmqpWebSockets
+            };
+            await using var client = new ServiceBusClient(connectionString, clientOptions);
 
             ServiceBusSender sender = client.CreateSender(topic_queue_Name);
 
